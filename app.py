@@ -10,7 +10,7 @@ import pickle
 batch_size = 64
 input_size = 28
 hidden_size = 100      # neurons
-layer_size = 2         # layers
+layer_size = 3         # layers
 output_size = 3
 
 model = MultilayerRNN_MNIST(input_size, hidden_size, layer_size, output_size, relu=False)
