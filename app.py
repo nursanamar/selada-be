@@ -10,7 +10,7 @@ import pickle
 batch_size = 64
 input_size = 28
 hidden_size = 100      # neurons
-layer_size = 3         # layers
+layer_size = 2         # layers
 output_size = 3
 
 model = MultilayerRNN_MNIST(input_size, hidden_size, layer_size, output_size, relu=False)
@@ -43,14 +43,29 @@ def predict():
 
     image_tensor = transform_image(path)
     output = model.forward(image_tensor)
-    confi, pred = output.max(1)
+    outputValue, pred = output.max(1)
+
+    outputsSum = 0
+    outputValues = output.tolist()[0]
+
+    for i in outputValues:
+        if i > 0:
+            outputsSum += i
+    
+    confidents = []
+    for idx,val in enumerate(outputValues):
+        confident = 0 if val < 0 else (val / outputsSum * 100) 
+        confidents.append({
+            "lable": getLabels(idx),
+            "confident": float("{:.2f}".format(confident))
+        })
 
     result = getLabels(pred.item())
-    confidentValue = confi.item()
+    confidentValue = 0
     return {
         "prediction": {
             "lable": result,
-            "confident": confidentValue
+            "confidents": confidents
         }
     }
 
